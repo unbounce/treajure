@@ -9,7 +9,7 @@
                \newline
                #(swap! emitted conj (bs/to-string %)))]
 
-    (testing "Emission on split char"
+    (testing "Emit on split char"
       (.write seos 65)
       (.write seos (byte-array [66 67]))
       (.write seos (byte-array [66 67 68 69 70 71]) 2 2)
@@ -19,4 +19,19 @@
       (.write seos (byte-array [70 71]))
       (.write seos (byte-array [13 10]))
       (.write seos (byte-array [72 73]))
-      (is (= @emitted ["ABCDE\r\n" "FG\r\n"])))))
+      (is (= @emitted ["ABCDE\r\n" "FG\r\n"])))
+
+    (reset! emitted [])
+
+    (testing "Emit on close"
+      (.write seos (byte-array [74 75]))
+      (is (= @emitted []))
+      (.close seos)
+      ;; we still have 72 73 from the previous
+      ;; interactions in the buffer
+      (is (= @emitted ["HIJK"])))
+
+    (testing "Writing after close"
+      (is
+        (thrown? IllegalStateException
+          (.write seos 65))))))
