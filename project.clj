@@ -6,9 +6,9 @@
             :comments "Copyright (c) 2015 Unbounce Marketing Solutions Inc."}
 
   :profiles {:dev {:plugins [[lein-kibit "0.0.8"]
-                             [jonase/eastwood "0.2.1"]]}
+                             [jonase/eastwood "0.2.1"]]
 
-             :test {:dependencies [[byte-streams "0.2.0-alpha8"]]}}
+                   :dependencies [[byte-streams "0.2.0-alpha8"]]}}
 
   :dependencies
   [
