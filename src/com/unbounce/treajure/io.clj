@@ -10,8 +10,11 @@
 
 (defn split-emit-output-stream
   "This class is an outputstream that acculates bytes until the specified character is met or until close are called.
-   When one of these events occur, it emits the accumulated bytes to the provided function."
-  [split-char emit-fn]
+   When one of these events occur, it emits the accumulated bytes to the provided function. An additional function
+   can optionally be provided to be called after the outputstream has been closed."
+  ([split-char emit-fn]
+   (split-emit-output-stream split-char emit-fn (fn [])))
+  ([split-char emit-fn close-fn]
     {:pre  [(char? split-char)
             (fn? emit-fn)]
      :post [(instance? OutputStream %)]}
@@ -37,9 +40,10 @@
                    (locking baos
                      (when @open?
                        (reset! open? false)
-                       (erb!)))))]
+                       (erb!)
+                       (close-fn)))))]
 
       ;; wrap the proxy in a FilterOutputStream to increase the compliance
       ;; to the Java API, thus avoiding issues related to the multiple
       ;; arities of the write method in OutputStream.
-      (FilterOutputStream. seos)))
+      (FilterOutputStream. seos))))

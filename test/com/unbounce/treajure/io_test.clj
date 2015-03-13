@@ -34,4 +34,13 @@
     (testing "Writing after close"
       (is
         (thrown? IllegalStateException
-          (.write seos 65))))))
+                 (.write seos 65))))
+
+    (testing "Call close-fn on close"
+      (let [closed (atom false)
+            seos (io/split-emit-output-stream
+                   \newline
+                   #()
+                   #(reset! closed true))]
+        (.close seos)
+        (is (= @closed true))))))
