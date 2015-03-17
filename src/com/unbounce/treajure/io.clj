@@ -4,14 +4,14 @@
                     FilterOutputStream]))
 
 (defn- emit-and-reset-bytes! [baos emit-fn]
-  (when (> (.size baos) 0)
+  (when (pos? (.size baos))
     (emit-fn (.toByteArray baos))
     (.reset baos)))
 
 (defn split-emit-output-stream
-  "This class is an outputstream that acculates bytes until the specified character is met or until close are called.
+  "Creates a java.io.OutputStream that acculates bytes until the specified character is met or until close are called.
    When one of these events occur, it emits the accumulated bytes to the provided function. An additional function
-   can optionally be provided to be called after the outputstream has been closed."
+   can optionally be provided to be called after the OutputStream has been closed."
   ([split-char emit-fn]
    (split-emit-output-stream split-char emit-fn (fn [])))
   ([split-char emit-fn close-fn]
@@ -24,7 +24,7 @@
           baos (ByteArrayOutputStream.)
           erb! #(emit-and-reset-bytes! baos emit-fn)
 
-          seos (proxy [java.io.OutputStream] []
+          seos (proxy [OutputStream] []
 
                  (write [c]
                    (locking baos
