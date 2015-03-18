@@ -1,4 +1,6 @@
 (ns com.unbounce.treajure.io
+  (:require [clojure.tools.logging :as log]
+            [clojure.java.io :as io])
   (:import [java.io OutputStream
                     ByteArrayOutputStream
                     FilterOutputStream]))
@@ -47,3 +49,28 @@
       ;; to the Java API, thus avoiding issues related to the multiple
       ;; arities of the write method in OutputStream.
       (FilterOutputStream. seos))))
+
+
+(defn slurp-bytes
+  "Slurp the bytes from a slurpable thing.
+   Lifted from: http://stackoverflow.com/a/26372677/387927"
+  [x]
+  (with-open [out (java.io.ByteArrayOutputStream.)]
+    (io/copy (io/input-stream x) out)
+    (.toByteArray out)))
+
+(defn string-bytes-size
+  "Get the size of a string in bytes, for the provided encoding.
+   Returns -1 if the encoding is unknown, and logs an error."
+  [string encoding]
+  {:pre [(or (nil? string) (string? string))
+         (string? encoding)]}
+  (if-not string
+    0
+    (try
+      (alength (.getBytes string encoding))
+      (catch Throwable t
+        (log/error t
+          "Failed to retrieve string bytes size with encoding:"
+          encoding)
+        -1))))

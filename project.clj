@@ -8,7 +8,9 @@
   :profiles {:dev {:plugins [[lein-kibit "0.0.8"]
                              [jonase/eastwood "0.2.1"]]
 
-                   :dependencies [[byte-streams "0.2.0-alpha8"]]}}
+                   :dependencies [[byte-streams "0.2.0-alpha8"]
+                                  [me.raynes/fs "1.4.6"]
+                                  [ring/ring-core "1.3.2"]]}}
 
   :dependencies
   [
