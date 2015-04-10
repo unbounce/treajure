@@ -31,9 +31,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MVar abstraction
 
-(declare new-empty-mvar new-mvar put-mvar take-mvar read-mvar)
+(declare empty-mvar mvar put-mvar take-mvar read-mvar)
 
-(defn new-empty-mvar
+(defn empty-mvar
   "Create an empty MVar"
   []
   (let [take-sem (Semaphore. 1)
@@ -41,15 +41,15 @@
     (.acquire take-sem)
     (mcons nil (mcons take-sem put-sem))))
 
-(defn new-mvar
+(defn mvar
   "Creates an MVar which contains given val"
   [val]
-  (let [mvar (new-empty-mvar)]
+  (let [mvar (empty-mvar)]
     (put-mvar mvar val)
         mvar))
 
 (defn put-mvar
-  "Puts a value inside the MVar, if MVar is full it will block current thread
+  "Puts value inside the MVar, if MVar is full it will block current thread
   waiting for MVar to be empty."
   [mvar val]
   (let [take-sem (mcar (mcdr mvar))
@@ -59,7 +59,7 @@
     (.release take-sem)))
 
 (defn take-mvar
-  "Takes a value out of the MVar, if MVar is empty it will block current thread
+  "Takes value out of the MVar, if MVar is empty it blocks current thread
   waiting for MVar to be filled."
   [mvar]
   (let [take-sem (mcar (mcdr mvar))
@@ -71,8 +71,9 @@
       val)))
 
 (defn read-mvar
-  "Reads value inside the MVar, if MVar is empty it will block current thread
-  waiting for MVar to be filled. This *will not* remove the value from the MVar."
+  "Reads value inside the MVar, if MVar is empty it blocks current thread
+  waiting for MVar to be filled. This operation *does not* take value out from
+  the MVar."
   [mvar]
   (let [take-sem (mcar (mcdr mvar))]
     (.acquire take-sem)
