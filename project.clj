@@ -5,7 +5,7 @@
             :url "http://opensource.org/licenses/MIT"
             :comments "Copyright (c) 2015 Unbounce Marketing Solutions Inc."}
 
-  :profiles {:dev {:plugins [[lein-kibit "0.0.8"]
+  :profiles {:dev {:plugins [[lein-kibit "0.1.2"]
                              [jonase/eastwood "0.2.1"]]
 
                    :dependencies [[byte-streams "0.2.0-alpha8"]
