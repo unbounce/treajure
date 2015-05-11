@@ -22,22 +22,33 @@
   "The MessageFormat used for formatting access log lines."
   "{0} - {1} [{2,date,dd/MMM/yyyy:HH:mm:ss Z}] {3} \"{4}\" {5} {6} \"{7}\" \"{8}\" {9} {10}")
 
+(defn- blankable-string [v]
+  (let [s (str v)]
+    (if (str/blank? s) "-" s)))
+
 ;; follows http://www.w3.org/TR/WD-logfile.html
 (defn- sanitize-string [s]
   (str/escape s {\" "\"\""}))
 
-(defn- make-message
+(defn -make-message
+  "Only public for testing, not intended for direct use."
   [start-time-nanos request response auth-principal-fn]
   (let [end-time-nanos (System/nanoTime)
         end-time-millis (System/currentTimeMillis)
         process-time-micros (.toMicros
                               TimeUnit/NANOSECONDS
                               (- end-time-nanos start-time-nanos))
-        client-ip (tring/request-client-ip request)
-        auth-principal ((fnil str "-") (auth-principal-fn request response))
-        host (first (str/split (get-in request [:headers "host"] "-") #":"))
-        method (str/upper-case (name (get request :request-method "-")))
-        path (get request :uri "-")
+        client-ip (blankable-string
+                    (tring/request-client-ip request))
+        auth-principal (blankable-string (auth-principal-fn request response))
+        host (first
+               (str/split
+                 (blankable-string
+                   (get-in request [:headers "host"])) #":"))
+        method (str/upper-case
+                 (name
+                   (get request :request-method :no-method)))
+        path (blankable-string (:uri request))
         query-string (get request :query-string)
         protocol (tring/request-protocol request)
         request-info (str method " " path
@@ -48,9 +59,12 @@
         response-size-string (if (neg? response-size)
                                "-"
                                (str response-size))
-        referrer (get-in request [:headers "referer"] "-")
-        user-agent (get-in request [:headers "user-agent"] "-")
-        request-id (tring/request-id request)]
+        referrer (blankable-string
+                   (get-in request [:headers "referer"]))
+        user-agent (blankable-string
+                     (get-in request [:headers "user-agent"]))
+        request-id (blankable-string
+                     (tring/request-id request))]
 
     (MessageFormat/format
       log-format
@@ -80,7 +94,7 @@
       'accesslog
       :info
       nil
-      (make-message
+      (-make-message
         start-time-nanos
         request
         response
@@ -105,7 +119,7 @@
 
   [handler & [{:keys [auth-principal-fn]
                :or {auth-principal-fn
-                    (fn -noop-auth-principal-fn [req res] nil)}}]]
+                    (constantly nil)}}]]
   {:pre [(fn? handler)
          (fn? auth-principal-fn)]}
   (fn -access-logger [request]
