@@ -1,0 +1,14 @@
+{
+    "type": "TestTypeV1.2",
+    "text_field": "foo",
+    "date_range": {
+        "start_date": "1985-04-12T23:20:50.521Z",
+        "end_date": "1985-04-13T23:20:50.521Z"
+    },
+    "single_date": "1985-04-12T23:20:50.521Z",
+    "integers": [
+        1,
+        2,
+        3
+    ]
+}

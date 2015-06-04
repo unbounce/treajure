@@ -13,5 +13,5 @@ pom.xml.asc
 *.nogit
 rubygems/
 .externalToolBuilders/
-
+*.log
 /bin/
