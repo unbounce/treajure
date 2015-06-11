@@ -115,14 +115,21 @@
         fragment)
       schema-map)))
 
+(defonce standalone-output-as
+  #{:string :map})
+
 (defn make-standalone
   "Outputs a new schema where all transitive references have been resolved."
-  [schema-uri]
+  [schema-uri & {:keys [output-as]
+                 :or {output-as :string}}]
   {:pre [(or
            (instance? URI schema-uri)
            (instance? URL schema-uri)
-           (string? schema-uri))]
-   :post [(string? %)]}
+           (string? schema-uri))
+         (contains? standalone-output-as output-as)]
+   :post [(or
+            (string? %)
+            (map? %))]}
 
   (let [uri (.normalize (any->uri schema-uri))]
     (assert (.isAbsolute uri)
@@ -133,5 +140,7 @@
       schema-uri)
 
     (binding [*cache* (atom {})]
-      (json/generate-string
-        (load-and-process uri)))))
+      (let [result (load-and-process uri)]
+        (case output-as
+          :string (json/generate-string result)
+          :map result)))))

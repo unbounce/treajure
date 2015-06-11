@@ -160,6 +160,22 @@
       (is (same-schemas?
             (schema/make-standalone
               (test-url "/extends_base_with_refs.json"))
+            (rsc->str "jsonschema/draft-3/expectations/extends_base_with_refs.json")))))
+
+  (testing "output-as map"
+    (testing "file system"
+      (is (same-schemas?
+            (json/generate-string
+              (schema/make-standalone
+                (io/resource "jsonschema/draft-3/fixtures/extends_base_with_refs.json")
+                :output-as :map))
+            (rsc->str "jsonschema/draft-3/expectations/extends_base_with_refs.json"))))
+    (testing "HTTP"
+      (is (same-schemas?
+            (json/generate-string
+              (schema/make-standalone
+                (test-url "/extends_base_with_refs.json")
+                :output-as :map))
             (rsc->str "jsonschema/draft-3/expectations/extends_base_with_refs.json"))))))
 
 (deftest standalone-schema
