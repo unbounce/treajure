@@ -13,13 +13,13 @@
 
 (declare ^:private load-and-process)
 
-(defmulti ^:private any->uri
+(defmulti ^:private ^URI any->uri
   (fn [v] [(class v)]))
 
-(defmethod ^:private any->uri [URI] [v]
+(defmethod ^:private any->uri [URI] [^URI v]
   v)
 
-(defmethod ^:private any->uri [URL] [v]
+(defmethod ^:private any->uri [URL] [^URL v]
   (.toURI v))
 
 (defmethod ^:private any->uri [String] [v]
@@ -44,7 +44,7 @@
       (str/split fragment #"/"))))
 
 (defn- resolve-ref
-  [uri schema-map $ref]
+  [^URI uri schema-map ^String $ref]
   (log/debug
     "Resolving ref:" $ref
     "for URI:" uri)
@@ -106,7 +106,7 @@
         schema-map)
       schema-map)))
 
-(defn- load-and-process [uri]
+(defn- load-and-process [^URI uri]
   (let [schema-map (load-and-process-schema uri)
         fragment (.getFragment uri)]
     (if fragment

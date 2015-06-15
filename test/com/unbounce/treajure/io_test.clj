@@ -17,9 +17,10 @@
       (.write seos (byte-array [13 10]))
       (is (= @emitted ["ABCDE\r\n"]))
       (.write seos (byte-array [70 71]))
+      (.write seos (byte-array [0xE2 0x99 0xA1]))
       (.write seos (byte-array [13 10]))
       (.write seos (byte-array [72 73]))
-      (is (= @emitted ["ABCDE\r\n" "FG\r\n"])))
+      (is (= @emitted ["ABCDE\r\n" "FG\u2661\r\n"])))
 
     (reset! emitted [])
 

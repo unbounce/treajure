@@ -41,15 +41,16 @@
   [request]
   (get request :protocol "HTTP/1.1"))
 
-(defn- request-port [request scheme host-bits server-port]
-  (if-let [x-forwarded-port (get-in
-                              request
-                              [:headers "x-forwarded-port"])]
+(defn- request-port
+  [request scheme host-bits server-port]
+  (if-let [^String x-forwarded-port (get-in
+                                      request
+                                      [:headers "x-forwarded-port"])]
 
   (Integer/valueOf x-forwarded-port)
 
   (if (> (count host-bits) 1)
-    (Integer/valueOf (second host-bits))
+    (Integer/valueOf ^String (second host-bits))
     (case scheme
       :http 80
       :https 443
@@ -129,10 +130,10 @@
   "Retrieves a byte-array representation of the request. The input-stream body of the request will be consumed and will not be readable anymore."
   [request]
   (let [body (:body request)
-        encoding (request-encoding request)]
+        ^String encoding (request-encoding request)]
     (when body
       (.getBytes
-        (slurp body :encoding encoding)
+        ^String (slurp body :encoding encoding)
         encoding))))
 
 (defn body-string
@@ -169,8 +170,8 @@
       (condp instance? body
         String (tio/string-bytes-size body encoding)
         ISeq (reduce + (map #(tio/string-bytes-size % encoding) body))
-        File (.length body)
-        InputStream (.available body)
+        File (.length ^File body)
+        InputStream (.available ^InputStream body)
         -1))))
 
 (defn response-bytes
@@ -179,8 +180,8 @@
   (let [body (:body response)
         encoding (or (response-encoding response) default-encoding)]
     (condp instance? body
-      String (.getBytes body encoding)
-      ISeq (.getBytes (str/join body) encoding)
+      String (.getBytes ^String body ^String encoding)
+      ISeq (.getBytes ^String (str/join body) ^String encoding)
       File (tio/slurp-bytes body)
       InputStream (tio/slurp-bytes body)
       nil)))

@@ -36,4 +36,6 @@
                   ["change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
                   ["vcs" "push"]]
+
+  :deploy-repositories [["releases" :clojars]]
 )

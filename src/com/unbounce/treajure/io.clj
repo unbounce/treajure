@@ -5,7 +5,8 @@
                     ByteArrayOutputStream
                     FilterOutputStream]))
 
-(defn- emit-and-reset-bytes! [baos emit-fn]
+(defn- emit-and-reset-bytes!
+  [^ByteArrayOutputStream baos emit-fn]
   (when (pos? (.size baos))
     (emit-fn (.toByteArray baos))
     (.reset baos)))
@@ -34,7 +35,7 @@
                        (throw
                          (IllegalStateException.
                            "The outputstream has been closed.")))
-                     (.write baos c)
+                     (.write baos (int c))
                      (when (= c split-int)
                        (erb!))))
 
@@ -62,7 +63,7 @@
 (defn string-bytes-size
   "Get the size of a string in bytes, for the provided encoding.
    Returns -1 if the encoding is unknown, and logs an error."
-  [string encoding]
+  [^String string ^String encoding]
   {:pre [(or (nil? string) (string? string))
          (string? encoding)]}
   (if-not string
