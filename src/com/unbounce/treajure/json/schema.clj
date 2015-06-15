@@ -27,7 +27,7 @@
 
 (defn- load-schema
   [uri]
-  (if-let [cached-schema-map (get *cache* uri)]
+  (if-let [cached-schema-map (get @*cache* uri)]
     cached-schema-map
     (let [schema-map (json/parse-stream
                      (io/reader uri))]
@@ -115,14 +115,28 @@
         fragment)
       schema-map)))
 
-(defonce standalone-output-as
+(defn- init-cache-content
+  [uri schema]
+  (if-not schema
+    {}
+    {uri (json/parse-string schema)}))
+
+(defonce ^{:doc "Supported output format"} standalone-output-as
   #{:string :map})
 
 (defn make-standalone
-  "Outputs a new schema where all transitive references have been resolved."
-  [schema-uri & {:keys [output-as]
-                 :or {output-as :string}}]
+  "Outputs a new schema where all transitive references have been resolved.
+   Supported options:
+
+   :output-as - a keyword that specifies the result format
+   :schema    - a string the contains the preloaded schema at the specified URI"
+  [schema-uri & {:keys [output-as schema]
+                 :or {output-as :string
+                      schema nil}}]
   {:pre [(or
+           (nil? schema)
+           (string? schema))
+         (or
            (instance? URI schema-uri)
            (instance? URL schema-uri)
            (string? schema-uri))
@@ -132,6 +146,7 @@
             (map? %))]}
 
   (let [uri (.normalize (any->uri schema-uri))]
+
     (assert (.isAbsolute uri)
       "Schema URI must be absolute")
 
@@ -139,7 +154,7 @@
       "Making standalone:"
       schema-uri)
 
-    (binding [*cache* (atom {})]
+    (binding [*cache* (atom (init-cache-content uri schema))]
       (let [result (load-and-process uri)]
         (case output-as
           :string (json/generate-string result)

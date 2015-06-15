@@ -162,6 +162,26 @@
               (test-url "/extends_base_with_refs.json"))
             (rsc->str "jsonschema/draft-3/expectations/extends_base_with_refs.json")))))
 
+  (testing "pre-loaded schema"
+    (testing "file system"
+      (is (same-schemas?
+            (schema/make-standalone
+              (io/resource "jsonschema/draft-3/fixtures/extends_base_with_refs.json")
+              :schema (rsc->str "jsonschema/draft-3/fixtures/extends_base_with_refs.json"))
+            (rsc->str "jsonschema/draft-3/expectations/extends_base_with_refs.json"))))
+    (testing "HTTP"
+      (is (same-schemas?
+            (schema/make-standalone
+              (test-url "/extends_base_with_refs.json")
+              :schema (rsc->str "jsonschema/draft-3/fixtures/extends_base_with_refs.json"))
+            (rsc->str "jsonschema/draft-3/expectations/extends_base_with_refs.json"))))
+    (testing "HTTP with missing URI"
+      (is (same-schemas?
+            (schema/make-standalone
+              (test-url "/missing.json")
+              :schema (rsc->str "jsonschema/draft-3/fixtures/extends_base_with_refs.json"))
+            (rsc->str "jsonschema/draft-3/expectations/extends_base_with_refs.json")))))
+
   (testing "output-as map"
     (testing "file system"
       (is (same-schemas?
