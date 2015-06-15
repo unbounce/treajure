@@ -128,8 +128,10 @@
   "Outputs a new schema where all transitive references have been resolved.
    Supported options:
 
-   :output-as - a keyword that specifies the result format
-   :schema    - a string the contains the preloaded schema at the specified URI"
+   :output-as - a keyword that specifies the result format.
+                default is :string
+   :schema    - a string that contains the preloaded schema at the specified URI.
+                keys must be strings!"
   [schema-uri & {:keys [output-as schema]
                  :or {output-as :string
                       schema nil}}]
