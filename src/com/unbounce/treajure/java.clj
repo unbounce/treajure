@@ -6,7 +6,7 @@
 (extend-protocol ToClojure
   java.util.Map
   (->clj [o] (let [entries (.entrySet o)]
-               (reduce (fn [m [^String k v]]
+               (reduce (fn [m [k v]]
                          (assoc m k (->clj v)))
                        {} entries)))
 
