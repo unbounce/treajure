@@ -20,7 +20,8 @@
 
   :dependencies
   [
-   [org.clojure/clojure "1.6.0"]
+   [org.clojure/clojure "1.7.0"]
+   [bwo/monads "0.2.0"]
   ]
 
   :release-tasks [["vcs" "assert-committed"]
