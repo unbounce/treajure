@@ -22,7 +22,7 @@
 
 
 ;; Java collections utils
-(defn in? [^Object key ^Collection collection]
+(defn in? [key ^Collection collection]
   (if (nil? collection)
     false
     (.contains collection key)))
