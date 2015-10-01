@@ -1,4 +1,5 @@
-(ns com.unbounce.treajure.java)
+(ns com.unbounce.treajure.java
+  (:import (java.util Collection)))
 
 (defprotocol ToClojure
   (->clj [o]))
@@ -22,5 +23,7 @@
 
 ;; Java collections utils
 (defn in? [^Object key ^Collection collection]
-  (.contains collection key))
+  (if (nil? collection)
+    false
+    (.contains collection key)))
 
