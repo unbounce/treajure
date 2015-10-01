@@ -18,3 +18,9 @@
 
   nil
   (->clj [_] nil))
+
+
+;; Java collections utils
+(defn in? [^Object key ^Collection collection]
+  (.contains collection key))
+
