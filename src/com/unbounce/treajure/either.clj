@@ -46,6 +46,37 @@ monadic sub-routine performs side-effects)"
     (monads.types/left? (run-either val))
     (monads.types/left? val)))
 
+(defn or-else*
+  "Returns first argument that has a Right value"
+  ([e1 e2]
+   (if (right? e1)
+     e1
+     e2))
+  ([e1 e2 & rem]
+   (reduce or-else* (or-else* e1 e2) rem)))
+
+(defn or-else
+  "Returns first Right value from seq"
+  [es]
+  (reduce or-else*
+          (first es)
+          (rest es)))
+
+(defn from-left
+  "Unwraps Either value when it is left, otherwise return def"
+  [def e]
+  (either identity
+          (constantly def)
+          e))
+
+(defn from-right
+  "Unwraps Either value when it is right, otherwise return def"
+  [def e]
+  (either (constantly def)
+          identity
+          e))
+
+
 (defn left-map
   "Calls `f' on the wrapped Either value when wrapper is a `left'"
   [f val]
