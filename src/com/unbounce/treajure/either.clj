@@ -48,12 +48,14 @@ monadic sub-routine performs side-effects)"
 
 (defn or-else*
   "Returns first argument that has a Right value"
-  ([e1 e2]
-   (if (right? e1)
-     e1
-     e2))
-  ([e1 e2 & rem]
-   (reduce or-else* (or-else* e1 e2) rem)))
+  [e0 & rem0]
+  (loop [e   e0
+         rem rem0]
+    (if (or (right? e)
+            (nil? rem))
+      e
+      (recur (first rem)
+             (next rem)))))
 
 (defn or-else
   "Returns first Right value from seq"
@@ -61,6 +63,7 @@ monadic sub-routine performs side-effects)"
   (reduce or-else*
           (first es)
           (rest es)))
+
 
 (defn from-left
   "Unwraps Either value when it is left, otherwise return def"
