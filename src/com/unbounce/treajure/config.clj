@@ -30,8 +30,9 @@
     (System/getenv name))
 
   clojure.lang.PersistentVector
-  (edn-env-reader [[name def]]
-    (assert (instance? String def))
+  (edn-env-reader [[name def & _]]
+    (assert (instance? String def)
+            "Default value must be a String")
     (or (System/getenv name)
         def)))
 
@@ -42,7 +43,7 @@
   `env-var' is used, this env var must hold the path of the filepath that
   contains the configuration."
   (fn [source]
-    {:pre [(instance? ConfigPath source)]}
+    (assert (instance? ConfigPath source))
     (:type source)))
 
 (defmethod fetch-config :envvar [{:keys [val default]}]
@@ -50,6 +51,9 @@
                               default))))
 
 (defmethod fetch-config :filepath [{:keys [val]}]
+  (assert (re-find #"\.edn$"
+                   val)
+          "Configuration file must have an .edn extension")
   (->> val
        io/resource
        io/reader
