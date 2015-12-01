@@ -32,7 +32,7 @@
   clojure.lang.PersistentVector
   (edn-env-reader [[name def & _]]
     (assert (instance? String def)
-            "Default value must be a String")
+            (str "Default value for key `" name "' must be a String"))
     (or (System/getenv name)
         def)))
 
