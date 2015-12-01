@@ -1,4 +1,0 @@
-{
- :option-1 #env "PATH"
- :option-2 #env ["TREAJURE_OPTION_2" "option_2"]
- }
