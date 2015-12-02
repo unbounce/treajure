@@ -14,7 +14,8 @@
                                   [cheshire "5.5.0"]
                                   [ring/ring-jetty-adapter "1.3.2"]
                                   [ring/ring-defaults "0.1.5"]
-                                  [com.github.fge/json-schema-validator "2.2.6"]]}
+                                  [com.github.fge/json-schema-validator "2.2.6"]]
+                   :resource-paths ["test-resources"]}
 
              :test {:resource-paths ["test-resources"]}}
 
