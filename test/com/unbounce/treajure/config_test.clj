@@ -6,19 +6,25 @@
 
 (deftest config-tests
 
-  (let [path (config/filepath "treajure_config.edn")]
+  (testing "existing path"
+    (let [path (config/filepath "treajure_config.edn")]
 
-    (testing "filepath returns a ConfigPath"
-      (is (instance? ConfigPath path)))
+      (testing "filepath returns a ConfigPath"
+        (is (instance? ConfigPath path)))
 
-    (let [config (config/fetch-config path)]
+      (let [config (config/fetch-config path)]
 
-      (testing "returns configuration map"
-        (is (not (nil? config))))
+        (testing "returns configuration map"
+          (is (not (nil? config))))
 
-      (testing "returns var-env value"
-        (is  (= (System/getenv "PATH")
-                (:option-1 config))))
+        (testing "returns var-env value"
+          (is  (= (System/getenv "PATH")
+                  (:option-1 config))))
 
-      (testing "returns non-nil value for key entries with defaults"
-        (is (= "option_2" (:option-2 config)))))))
+        (testing "returns non-nil value for key entries with defaults"
+          (is (= "option_2" (:option-2 config)))))))
+
+  (testing "non existing path"
+    (let [config (config/fetch-config
+                  (config/filepath "/etc/non-existing.edn"))]
+      (is (nil? config)))))

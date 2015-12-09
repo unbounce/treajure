@@ -50,6 +50,19 @@
     (assert (instance? ConfigPath source))
     (:type source)))
 
+(defn- fetch-file-config [path]
+  (let [f (io/file path)]
+    (if (.exists f)
+      f
+      nil)))
+
+(defn- get-file-fetcher [path]
+  (if (re-find #"^/" path)
+    ;; it's an absolute path
+    fetch-file-config
+    ;; it's on classpath
+    io/resource))
+
 (defmethod fetch-config :envvar [{:keys [val default]}]
   (fetch-config (filepath (or (System/getenv val)
                               default))))
@@ -58,12 +71,9 @@
   (assert (re-find #"\.edn$"
                    val)
           "Configuration file must have an .edn extension")
-  (let [resource (if (re-find #"^/" val)
-                   io/file     ;; it's an absolute path
-                   io/resource ;; it's on classpath
-                   )]
-    (some->> val
-             resource
-             io/reader
-             java.io.PushbackReader.
-             (edn/read {:readers {'env edn-env-reader}}))))
+
+  (let [resource-fn (get-file-fetcher val)]
+    (if-let [resource (resource-fn val)]
+      (with-open [h (java.io.PushbackReader.
+                     (io/reader resource))]
+        (edn/read {:readers {'env edn-env-reader}} h)))))
