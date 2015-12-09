@@ -58,8 +58,12 @@
   (assert (re-find #"\.edn$"
                    val)
           "Configuration file must have an .edn extension")
-  (some->> val
-           io/resource
-           io/reader
-           java.io.PushbackReader.
-           (edn/read {:readers {'env edn-env-reader}})))
+  (let [resource (if (re-find #"^/" val)
+                   io/file     ;; it's an absolute path
+                   io/resource ;; it's on classpath
+                   )]
+    (some->> val
+             resource
+             io/reader
+             java.io.PushbackReader.
+             (edn/read {:readers {'env edn-env-reader}}))))
