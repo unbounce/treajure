@@ -52,9 +52,8 @@
 
 (defn- fetch-file-config [path]
   (let [f (io/file path)]
-    (if (.exists f)
-      f
-      nil)))
+    (when (.exists f)
+      f)))
 
 (defn- get-file-fetcher [path]
   (if (re-find #"^/" path)
