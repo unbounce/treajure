@@ -1,5 +1,6 @@
 (ns com.unbounce.treajure.config
   (:require [clojure.java.io :as io]
+            [clojure.tools.logging :as log]
             [clojure.edn :as edn]
             [clojure.string :as str]))
 
@@ -33,8 +34,11 @@
   (edn-env-reader [[name def & _]]
     (assert (instance? String def)
             (str "Default value for key `" name "' must be a String"))
-    (or (System/getenv name)
-        def)))
+    (if-let [val (System/getenv name)]
+      (do
+        (log/info "Using value from ENV variable " name)
+        val)
+      def)))
 
 (defmulti fetch-config
   "Fetches configuration file from `source'.

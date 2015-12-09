@@ -9,15 +9,16 @@
                              [jonase/eastwood "0.2.1"]]
 
                    :dependencies [[byte-streams "0.2.0"]
+                                  [org.clojure/tools.logging "0.3.1"]
                                   [me.raynes/fs "1.4.6"]
                                   [ring/ring-core "1.3.2"]
                                   [cheshire "5.5.0"]
                                   [ring/ring-jetty-adapter "1.3.2"]
                                   [ring/ring-defaults "0.1.5"]
                                   [com.github.fge/json-schema-validator "2.2.6"]]
-                   :resource-paths ["test-resources"]}
+                   :resource-paths ["resources" "test-resources"]}
 
-             :test {:resource-paths ["test-resources"]}}
+             :test {:resource-paths ["resources" "test-resources"]}}
 
   :dependencies
   [
