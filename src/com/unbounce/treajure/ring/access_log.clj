@@ -136,6 +136,6 @@
           (log-access
             start-time-nanos
             request
-            nil
+            {}
             auth-principal-fn)
           (throw t))))))
