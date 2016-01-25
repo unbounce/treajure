@@ -18,9 +18,10 @@
 ;; {8} user-agent
 ;; {9} time taken to serve the request, in microseconds
 ;; {10} unique request ID
+;; {11} scheme (http/https)
 (def ^:const log-format
   "The MessageFormat used for formatting access log lines."
-  "{0} - {1} [{2,date,dd/MMM/yyyy:HH:mm:ss Z}] {3} \"{4}\" {5} {6} \"{7}\" \"{8}\" {9} {10}")
+  "{0} - {1} [{2,date,dd/MMM/yyyy:HH:mm:ss Z}] {3} \"{4}\" {5} {6} \"{7}\" \"{8}\" {9} {10} {11}")
 
 (defn- blankable-string [v]
   (let [s (str v)]
@@ -64,7 +65,9 @@
         user-agent (blankable-string
                      (get-in request [:headers "user-agent"]))
         request-id (blankable-string
-                     (tring/request-id request))]
+                     (tring/request-id request))
+        request-scheme (blankable-string
+                         (get-in request [:headers "x-forwarded-proto"]))]
 
     (MessageFormat/format
       log-format
@@ -80,7 +83,8 @@
          (sanitize-string referrer)
          (sanitize-string user-agent)
          process-time-micros
-         request-id]))))
+         request-id
+         request-scheme]))))
 
 (defn log-access
   "Ouputs an access log line. Typically not used directly but via the access-logger middleware."
