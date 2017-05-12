@@ -28,6 +28,6 @@ A treasure trove of Clojure goodness.
 
 ## License
 
-Copyright (c) 2015 Unbounce Marketing Solutions Inc.
+Copyright (c) 2015-2017 Unbounce Marketing Solutions Inc.
 
 Distributed under the MIT License.
