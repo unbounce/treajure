@@ -4,7 +4,7 @@
            java.util.Collections
            javax.crypto.Mac
            javax.crypto.spec.SecretKeySpec
-           javax.xml.bind.DatatypeConverter))
+           java.util.Base64))
 
 (defonce ^:private encoding "US-ASCII")
 (defonce ^:private algorithm "HmacSHA1")
@@ -27,13 +27,15 @@
           secret)
         algorithm))))
 
-(defn- bytes->hex-string
-  [bs]
-  (DatatypeConverter/printHexBinary bs))
+
+(defn- bytes->hex-string [bs]
+  (clojure.string/join
+         (for [b bs]
+           (subs (Integer/toHexString (bit-or (bit-and (int b) 0xff) 0x100)) 1 3))))
 
 (defn- b64-string->bytes
   [b64-string]
-  (DatatypeConverter/parseBase64Binary b64-string))
+  (.decode (Base64/getDecoder) b64-string))
 
 (defn- aindex-of
   [haystack needle]
