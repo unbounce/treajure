@@ -21,16 +21,18 @@
 
   (testing "invalid session"
     (is (=
-          (rails/session-token->user-id
+         [nil "Invalid session"]
+         (rails/session-token->user-id
             (str
               "aGVsbG8gd29ybGQ="
               "--2f3ce5e672f56139f0fa2b1b9d24a298b66f4e0c")
             secret)
-          [nil "Invalid session"])))
+          )))
 
   (testing "invalid signature"
     (is (=
-          (rails/session-token->user-id
+         [nil "Invalid signature"]
+         (rails/session-token->user-id
             (str
               "BAh7CEkiD3Nlc3Npb25faWQGOgZFRkkiJTI1ZjQ4YWI5NTk0N"
               "zRlMmY0ODU0YjEwNjE3NDExNDU1BjsAVEkiEF9jc3JmX3Rva2"
@@ -38,11 +40,12 @@
               "XdFlNd0pnSFBDNjNBaFU9BjsARkkiDHVzZXJfaWQGOwBGaTk="
               "--invalid")
             secret)
-          [nil "Invalid signature"])))
+          )))
 
   (testing "one byte user id"
     (is (=
-          (rails/session-token->user-id
+         [52 nil]
+         (rails/session-token->user-id
             (str
               "BAh7CEkiD3Nlc3Npb25faWQGOgZFRkkiJTI1ZjQ4YWI5NTk0N"
               "zRlMmY0ODU0YjEwNjE3NDExNDU1BjsAVEkiEF9jc3JmX3Rva2"
@@ -50,11 +53,12 @@
               "XdFlNd0pnSFBDNjNBaFU9BjsARkkiDHVzZXJfaWQGOwBGaTk="
               "--d231cf1a735df9c4048137580623a0a7f7e5f5fd")
             secret)
-          [52 nil])))
+          )))
 
   (testing "more than one byte user id"
     (is (=
-          (rails/session-token->user-id
+         [585672 nil]
+         (rails/session-token->user-id
             (str
               "BAh7CUkiD3Nlc3Npb25faWQGOgZFRkkiJWIzMmUxM2QwZTA5O"
               "Tg4ZjlhNDRlNmI2YzhjNTk0ODZjBjsAVEkiEF9jc3JmX3Rva2"
@@ -66,4 +70,4 @@
               "vZ2dlZCBpbiBzdWNjZXNzZnVsbHkGOwBGOglAbm93MA=="
               "--7fcd6e75ceaeaf9ae13576c960468ff949104913")
             secret)
-          [585672 nil]))))
+          ))))
