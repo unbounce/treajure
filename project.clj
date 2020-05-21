@@ -25,7 +25,10 @@
    [org.clojure/clojure "1.10.1"]
    [bwo/monads "0.2.2"]
    [bwo/macroparser "0.0.7c"]
-  ]
+   [at.favre.lib/bytes "1.3.0"]
+   ]
+
+  :global-vars {*warn-on-reflection* true}
 
   :release-tasks [["vcs" "assert-committed"]
                   ["clean"]
