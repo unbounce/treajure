@@ -15,9 +15,9 @@
   "Creates a java.io.OutputStream that acculates bytes until the specified character is met or until close are called.
    When one of these events occur, it emits the accumulated bytes to the provided function. An additional function
    can optionally be provided to be called after the OutputStream has been closed."
-  ([split-char emit-fn]
+  (^OutputStream [split-char emit-fn]
    (split-emit-output-stream split-char emit-fn (fn [])))
-  ([split-char emit-fn close-fn]
+  (^OutputStream [split-char emit-fn close-fn]
     {:pre  [(char? split-char)
             (fn? emit-fn)]
      :post [(instance? OutputStream %)]}

@@ -7,7 +7,7 @@
 (def ^:dynamic *test-file* nil)
 
 (defonce ^:private test-file-contents "this is a test file")
-(defonce ^:private test-stream-contents "streamed data")
+(defonce ^:private ^String test-stream-contents "streamed data")
 
 (defn- with-app [f]
   (let [test-file (fs/temp-file "treajure" "test")]
@@ -74,7 +74,7 @@
     (tring/strip-charset "text/html; charset=UTF-16") "text/html"))
 
 (defn- bytes-seq [e]
-  (when e (seq (.getBytes e))))
+  (when e (seq (.getBytes ^String e))))
 
 (deftest request-bytes
   (with-open [r (io/input-stream (.getBytes test-stream-contents))]
