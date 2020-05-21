@@ -5,8 +5,8 @@
             :url "http://opensource.org/licenses/MIT"
             :comments "Copyright (c) 2015-2020 Unbounce Marketing Solutions Inc."}
 
-  :profiles {:dev {:plugins [[lein-kibit "0.1.2"]
-                             [jonase/eastwood "0.2.3"]]
+  :profiles {:dev {:plugins [[lein-kibit "0.1.8"]
+                             [jonase/eastwood "0.3.6"]]
 
                    :dependencies [[byte-streams "0.2.4"]
                                   [org.clojure/tools.logging "1.1.0"]
