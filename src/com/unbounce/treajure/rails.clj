@@ -4,14 +4,14 @@
            java.util.Collections
            javax.crypto.Mac
            javax.crypto.spec.SecretKeySpec
-           javax.xml.bind.DatatypeConverter))
+           at.favre.lib.bytes.Bytes))
 
 (defonce ^:private encoding "US-ASCII")
 (defonce ^:private algorithm "HmacSHA1")
 
 (defn- string->bytes
-  [s]
-  (.getBytes s encoding))
+  [^String s]
+  (.getBytes s ^String encoding))
 
 (defonce ^:private user-id-field-marker
   (seq
@@ -28,12 +28,12 @@
         algorithm))))
 
 (defn- bytes->hex-string
-  [bs]
-  (DatatypeConverter/printHexBinary bs))
+  [^"[B" bs]
+  (.encodeHex (Bytes/wrap bs)))
 
 (defn- b64-string->bytes
-  [b64-string]
-  (DatatypeConverter/parseBase64Binary b64-string))
+  [^String b64-string]
+  (.array (Bytes/parseBase64 b64-string)))
 
 (defn- aindex-of
   [haystack needle]

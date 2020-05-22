@@ -3,18 +3,21 @@
   :url "https://www.github.com/unbounce/treajure"
   :license {:name "The MIT License (MIT)"
             :url "http://opensource.org/licenses/MIT"
-            :comments "Copyright (c) 2015-2017 Unbounce Marketing Solutions Inc."}
+            :comments "Copyright (c) 2015-2020 Unbounce Marketing Solutions Inc."}
 
-  :profiles {:dev {:plugins [[lein-kibit "0.1.2"]
-                             [jonase/eastwood "0.2.3"]]
+  :profiles {:1.8  {:dependencies [[org.clojure/clojure "1.8.0"]]}
+             :1.10 {:dependecies  [[org.clojure/clojure "1.10.1"]]}
 
-                   :dependencies [[byte-streams "0.2.2"]
-                                  [org.clojure/tools.logging "0.3.1"]
+             :dev {:plugins [[lein-kibit "0.1.8"]
+                             [jonase/eastwood "0.3.6"]]
+
+                   :dependencies [[byte-streams "0.2.4"]
+                                  [org.clojure/tools.logging "1.1.0"]
                                   [me.raynes/fs "1.4.6"]
-                                  [ring/ring-core "1.6.0"]
-                                  [cheshire "5.7.1"]
-                                  [ring/ring-jetty-adapter "1.6.0"]
-                                  [ring/ring-defaults "0.3.0"]
+                                  [ring/ring-core "1.8.1"]
+                                  [cheshire "5.10.0"]
+                                  [ring/ring-jetty-adapter "1.8.1"]
+                                  [ring/ring-defaults "0.3.2"]
                                   [com.github.fge/json-schema-validator "2.2.6"]]
                    :resource-paths ["resources" "test-resources"]}
 
@@ -22,9 +25,13 @@
 
   :dependencies
   [
-   [org.clojure/clojure "1.8.0"]
+   [org.clojure/clojure "1.10.1"]
    [bwo/monads "0.2.2"]
-  ]
+   [bwo/macroparser "0.0.7c"]
+   [at.favre.lib/bytes "1.3.0"]
+   ]
+
+  :global-vars {*warn-on-reflection* true}
 
   :release-tasks [["vcs" "assert-committed"]
                   ["clean"]

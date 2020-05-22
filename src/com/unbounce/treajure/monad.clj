@@ -1,5 +1,5 @@
 (ns com.unbounce.treajure.monad
-  (:refer-clojure :hide [do])
+  (:refer-clojure :exclude [do])
   (:require [monads.core :refer [>>=] :as monads])
   (:import [monads.types Bind Return]))
 

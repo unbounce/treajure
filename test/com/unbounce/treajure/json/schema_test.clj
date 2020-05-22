@@ -206,7 +206,7 @@
                       ".json")
         _ (spit schema-file schema-str)
         schema (.getJsonSchema
-                 json-schema-factory
+                 ^JsonSchemaFactory json-schema-factory
                  (str (.toURI schema-file)))]
 
     (is (.validInstanceUnchecked
