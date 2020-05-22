@@ -1,4 +1,4 @@
-(defproject com.unbounce/treajure "1.0.13-SNAPSHOT"
+(defproject com.unbounce/treajure "1.0.13"
   :description "A treasure trove of Clojure goodness."
   :url "https://www.github.com/unbounce/treajure"
   :license {:name "The MIT License (MIT)"
